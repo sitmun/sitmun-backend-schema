@@ -1,0 +1,15 @@
+#* @vtlvariable name="identifiers" type="schemacrawler.schemacrawler.Identifiers" *#
+#* @vtlvariable name="table" type="schemacrawler.schema.Table" *#
+#if ($table.tableType == "table")
+=== Table `$table.name`
+    #parse("table_columns.vm")
+    #if($table.hasPrimaryKey())
+        #parse("table_primary_key.vm")
+    #end
+    #if(!$table.foreignKeys.isEmpty())
+        #parse("table_foreign_keys.vm")
+    #end
+    #if(!$table.indexes.isEmpty())
+        #parse("table_indexes.vm")
+    #end
+#end

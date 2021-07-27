@@ -1,0 +1,21 @@
+#* @vtlvariable name="table" type="schemacrawler.schema.Table" *#
+#* @vtlvariable name="formatter" type="org.sitmun.backend.schema.Formatter" *#
+
+[caption=]
+.Primary keys
+[%autowidth]
+|===
+| Key | Type | Columns
+
+#if($table.primaryKey)
+|`$table.primaryKey.name`
+|primary key
+|#foreach($column in $table.primaryKey.columns) `$column.name` #if($foreach.count < $table.primaryKey.columns.size()), #end #end
+#end
+
+#foreach($index in $table.alternateKeys)
+|`$index.name`
+|alternate primary key
+|#foreach($column in $index.columns) `$column.name` #if($foreach.count < $index.columns.size()), #end #end
+#end
+|===
