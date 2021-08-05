@@ -16,3 +16,4 @@ image::schema.svg[]
         #parse("table.vm")
     #end
 #end
+include::configurationParameters.adoc[]

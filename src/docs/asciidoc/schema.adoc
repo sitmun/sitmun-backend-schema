@@ -16,7 +16,7 @@
 |SchemaCrawler 16.15.2
 
 |generated on
-|2021-07-27 14:13:50.932654
+|2021-08-05 13:04:49.653007
 
 |database
 |H2 1.4.200 (2019-10-14)
@@ -4125,3 +4125,4 @@ image::schema.svg[]
 |unique index
 | `UCO_USERID` ascending,   `UCO_TERID` ascending,   `UCO_ROLEID` ascending,   `UCO_ROLEM` ascending 
 |===
+include::configurationParameters.adoc[]
