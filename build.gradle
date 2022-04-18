@@ -2,6 +2,7 @@ plugins {
     id 'org.asciidoctor.jvm.pdf' version '3.3.0'
     id 'org.asciidoctor.jvm.gems' version '3.3.0'
     id 'java'
+    id 'application'
 }
 
 group 'org.example'
@@ -13,14 +14,15 @@ repositories {
 }
 
 dependencies {
-    implementation 'us.fatehi:schemacrawler:16.15.2'
-    implementation 'us.fatehi:schemacrawler-diagram:16.15.2'
-    implementation 'us.fatehi:schemacrawler-scripting:16.15.2'
+    implementation 'us.fatehi:schemacrawler:16.16.14'
+    implementation 'us.fatehi:schemacrawler-diagram:16.16.14'
+    implementation 'us.fatehi:schemacrawler-scripting:16.16.14'
     implementation 'com.h2database:h2:1.4.200'
     implementation 'org.apache.velocity:velocity-engine-core:2.3'
+    implementation 'org.slf4j:slf4j-simple:1.7.30'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
 
 test {
@@ -49,3 +51,7 @@ asciidoctorPdf {
 }
 
 task asciidoctor(dependsOn: asciidoctorPdf)
+
+application {
+    mainClass = 'org.sitmun.backend.schema.GenerateSchema'
+}

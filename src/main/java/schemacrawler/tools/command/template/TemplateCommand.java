@@ -38,6 +38,7 @@ import schemacrawler.tools.command.template.options.TemplateLanguageType;
 import schemacrawler.tools.executable.BaseSchemaCrawlerCommand;
 import schemacrawler.tools.options.LanguageOptions;
 
+
 public final class TemplateCommand extends BaseSchemaCrawlerCommand<LanguageOptions> {
 
     static final String COMMAND = "template";
@@ -47,14 +48,14 @@ public final class TemplateCommand extends BaseSchemaCrawlerCommand<LanguageOpti
     }
 
     @Override
-    public void checkAvailability() throws Exception {
+    public void checkAvailability() {
         // Nothing to check at this point. The Command should be available
         // after the class is loaded, and imports are resolved.
     }
 
     /** {@inheritDoc} */
     @Override
-    public void execute() throws Exception {
+    public void execute() {
         requireNonNull(commandOptions, "No template language provided");
         checkCatalog();
 
@@ -62,10 +63,7 @@ public final class TemplateCommand extends BaseSchemaCrawlerCommand<LanguageOpti
         final TemplateLanguageType languageType =
                 TemplateLanguageType.valueOf(commandOptions.getLanguage());
 
-        final String templateRendererClassName = languageType.getTemplateRendererClassName();
-        final Class<TemplateRenderer> templateRendererClass =
-                (Class<TemplateRenderer>) Class.forName(templateRendererClassName);
-        final TemplateRenderer templateRenderer = templateRendererClass.newInstance();
+        final TemplateRenderer templateRenderer = newTemplateRenderer(languageType);
 
         final Map<String, Object> context = new HashMap<>();
         context.put("catalog", catalog);
@@ -82,5 +80,18 @@ public final class TemplateCommand extends BaseSchemaCrawlerCommand<LanguageOpti
     @Override
     public boolean usesConnection() {
         return true;
+    }
+
+    private TemplateRenderer newTemplateRenderer(final TemplateLanguageType languageType) {
+        try {
+            final String templateRendererClassName = languageType.getTemplateRendererClassName();
+            //noinspection unchecked
+            final Class<TemplateRenderer> templateRendererClass =
+                    (Class<TemplateRenderer>) Class.forName(templateRendererClassName);
+            return templateRendererClass.newInstance();
+        } catch (final Exception e) {
+            throw new RuntimeException(
+                    String.format("Could not instantiate template renderer for <%s>", languageType), e);
+        }
     }
 }

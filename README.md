@@ -16,3 +16,7 @@ The configuration of the current version is harcoded and expects a H2 file at `j
 
 The source of the generated documentation is in the folder [src/docs/asciidoc]. 
 In the folder [docs](docs) is the file [schema.pdf] that has been generated with `gradle asciidocPdf` from the source.
+
+## Requirements
+
+- Graphviz
