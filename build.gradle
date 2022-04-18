@@ -20,6 +20,7 @@ dependencies {
     implementation 'com.h2database:h2:1.4.200'
     implementation 'org.apache.velocity:velocity-engine-core:2.3'
     implementation 'org.slf4j:slf4j-simple:1.7.30'
+    implementation 'com.typesafe:config:1.4.2'
 
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
@@ -42,7 +43,7 @@ dependencies {
 asciidoctorPdf {
     dependsOn asciidoctorGemsPrepare
 
-    baseDirFollowsSourceFile()
+    baseDir = 'asciidoc'
 
     asciidoctorj {
         requires 'rouge'
@@ -60,4 +61,10 @@ task asciidoctor(dependsOn: asciidoctorPdf)
 
 application {
     mainClass = 'org.sitmun.backend.schema.GenerateSchema'
+}
+
+task exampleBuild(type : JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'org.sitmun.backend.schema.GenerateSchema'
+    workingDir = 'example'
 }

@@ -1,3 +1,4 @@
+#* @vtlvariable name="config" type="org.sitmun.backend.schema.model.Configuration" *#
 = SITMUN 3 Data Dictionary
 :reproducible:
 :listing-caption: Listing
@@ -16,4 +17,8 @@ image::schema.svg[]
         #parse("table.vm")
     #end
 #end
-include::configurationParameters.adoc[]
+
+#set($noop = "[]")
+#foreach($file in $config.output.includeFiles)
+include::$file$noop
+#end

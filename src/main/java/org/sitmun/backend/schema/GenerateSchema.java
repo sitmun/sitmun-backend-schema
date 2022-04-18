@@ -1,6 +1,8 @@
 package org.sitmun.backend.schema;
 
-import org.sitmun.backend.schema.model.Schema;
+import com.typesafe.config.ConfigBeanFactory;
+import com.typesafe.config.ConfigFactory;
+import org.sitmun.backend.schema.model.Configuration;
 import org.sitmun.backend.schema.model.Table;
 import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
 import schemacrawler.schemacrawler.*;
@@ -16,22 +18,34 @@ import schemacrawler.tools.options.OutputOptions;
 import schemacrawler.tools.options.OutputOptionsBuilder;
 import us.fatehi.utility.LoggingConfig;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
-import java.util.List;
+import java.util.Comparator;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public final class GenerateSchema {
 
     public static void main(final String[] args) throws Exception {
+
+        System.setProperty("config.file","application.conf");
+        com.typesafe.config.Config config = ConfigFactory.load();
+        Configuration conf = ConfigBeanFactory.create(config, Configuration.class);
+
+        for (Table table: conf.getSchema().getTables()) {
+            table.setDescription(trim(table.getDescription()));
+        }
 
         // Set log level
         new LoggingConfig(Level.OFF);
 
         // Create the options
         final LimitOptionsBuilder limitOptionsBuilder = LimitOptionsBuilder.builder()
-            .includeSchemas(new RegularExpressionInclusionRule("SITMUNDB.PUBLIC"));
+            .includeSchemas(new RegularExpressionInclusionRule(conf.getSchema().getName()));
         final LoadOptionsBuilder loadOptionsBuilder = LoadOptionsBuilder.builder()
             .withSchemaInfoLevel(SchemaInfoLevelBuilder.maximum());
         final SchemaCrawlerOptions options =
@@ -39,13 +53,30 @@ public final class GenerateSchema {
                         .withLimitOptions(limitOptionsBuilder.toOptions())
                         .withLoadOptions(loadOptionsBuilder.toOptions());
 
-        try (Connection connection = getConnection()) {
-            createImage(options, getOutputFile("./src/docs/asciidoc/images/schema.svg"), connection);
-            createDocument(options, getOutputFile("./src/docs/asciidoc/schema.adoc"), connection);
+        Path outputFolder = Paths.get(conf.getOutput().getFolder());
+        Path imageFolder = Paths.get(conf.getOutput().getFolder(), "images");
+        if (Files.exists(outputFolder)) {
+            Files.walk(outputFolder)
+                    .sorted(Comparator.reverseOrder())
+                    .map(Path::toFile)
+                    .forEach(File::delete);
+        }
+        Files.createDirectory(outputFolder);
+        Files.createDirectory(imageFolder);
+        Path outputImage = Paths.get(conf.getOutput().getFolder(), "images", "schema.svg").toAbsolutePath().normalize();
+        Path outputDoc = Paths.get(conf.getOutput().getFolder(), "schema.adoc").toAbsolutePath().normalize();
+
+        for(String fileName : conf.getOutput().getIncludeFiles()) {
+            Files.copy(Paths.get(fileName),  Paths.get(conf.getOutput().getFolder(), fileName));
+        }
+
+        try (Connection connection = getConnection(conf)) {
+            createImage(options, outputImage, connection);
+            createDocument(conf, options, outputDoc, connection);
         }
     }
 
-    private static void createDocument(SchemaCrawlerOptions options, Path file, Connection connection) throws Exception {
+    private static void createDocument(Configuration conf, SchemaCrawlerOptions options, Path file, Connection connection) throws Exception {
         final SchemaCrawlerExecutable executable = new SchemaCrawlerExecutable("template");
         executable.setSchemaCrawlerOptions(options);
         executable.setConnection(connection);
@@ -54,12 +85,9 @@ public final class GenerateSchema {
         additionalConfig.put("template", "plaintextschema.vm");
         additionalConfig.put("templating-language", "velocity");
         executable.setAdditionalConfiguration(additionalConfig);
-        TemplateCommand.additionalContext.put("formatter", new Formatter());
 
-        Table table = new Table("DATABASECHANGELOG", "Some description");
-        Schema schema = new Schema();
-        schema.setTables(List.of(table));
-        TemplateCommand.additionalContext.put("metadata", schema);
+        TemplateCommand.additionalContext.put("formatter", new Formatter());
+        TemplateCommand.additionalContext.put("config", conf);
 
         executable.execute();
     }
@@ -76,14 +104,17 @@ public final class GenerateSchema {
         executable.execute();
     }
 
-    private static Connection getConnection() {
-        final String connectionUrl = "jdbc:h2:file:./build/sitmundb";
+    private static Connection getConnection(Configuration conf) {
+        final String connectionUrl = conf.getDatabase().getUrl();
         final DatabaseConnectionSource dataSource = new DatabaseConnectionSource(connectionUrl);
-        dataSource.setUserCredentials(new SingleUseUserCredentials("sample", ""));
+        dataSource.setUserCredentials(new SingleUseUserCredentials(conf.getDatabase().getUser(), conf.getDatabase().getPassword()));
         return dataSource.get();
     }
 
-    private static Path getOutputFile(final String name) {
-        return Paths.get(name).toAbsolutePath().normalize();
+    private static String trim(String text) {
+        return Pattern.compile("\n").splitAsStream(text)
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.joining("\n"));
     }
 }

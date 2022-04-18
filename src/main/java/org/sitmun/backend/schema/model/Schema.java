@@ -7,6 +7,7 @@ import java.util.Objects;
 
 @Data
 public class Schema {
+    private String name;
     private List<Table> tables;
 
     public boolean hasTable(String name) {
