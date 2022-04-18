@@ -23,8 +23,16 @@ asciidoctorPdf {
     }
     outputDir  file('build/pdf')
 
+    theme = 'sitmun'
 
     asciidoctorj {
+        pdfThemes {
+            local 'sitmun', {
+                themeDir = 'themes/sitmun'
+                themeName = 'sitmun'
+            }
+        }
+
         requires 'rouge'
         attributes 'build-gradle': file('build.gradle'),
                 'source-highlighter': 'rouge',
