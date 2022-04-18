@@ -33,7 +33,6 @@ import static java.util.Objects.requireNonNull;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.sitmun.backend.schema.Formatter;
 import schemacrawler.tools.command.template.options.TemplateLanguageType;
 import schemacrawler.tools.executable.BaseSchemaCrawlerCommand;
 import schemacrawler.tools.options.LanguageOptions;
@@ -42,6 +41,8 @@ import schemacrawler.tools.options.LanguageOptions;
 public final class TemplateCommand extends BaseSchemaCrawlerCommand<LanguageOptions> {
 
     static final String COMMAND = "template";
+
+    public static final Map<String, Object> additionalContext = new HashMap<>();
 
     public TemplateCommand() {
         super(COMMAND);
@@ -68,7 +69,8 @@ public final class TemplateCommand extends BaseSchemaCrawlerCommand<LanguageOpti
         final Map<String, Object> context = new HashMap<>();
         context.put("catalog", catalog);
         context.put("identifiers", identifiers);
-        context.put("formatter", new Formatter());
+        context.putAll(additionalContext);
+        additionalContext.clear();
 
         templateRenderer.setResourceFilename(commandOptions.getScript());
         templateRenderer.setContext(context);

@@ -1,7 +1,12 @@
 #* @vtlvariable name="identifiers" type="schemacrawler.schemacrawler.Identifiers" *#
 #* @vtlvariable name="table" type="schemacrawler.schema.Table" *#
+#* @vtlvariable name="metadata" type="org.sitmun.backend.schema.model.Schema" *#
+
 #if ($table.tableType == "table")
 === Table `$table.name`
+    #if($metadata.hasTable($table.name))
+$metadata.getTable($table.name).description
+    #end
     #parse("table_columns.vm")
     #if($table.hasPrimaryKey())
         #parse("table_primary_key.vm")

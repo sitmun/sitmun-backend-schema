@@ -1,7 +1,10 @@
 package org.sitmun.backend.schema;
 
+import org.sitmun.backend.schema.model.Schema;
+import org.sitmun.backend.schema.model.Table;
 import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
 import schemacrawler.schemacrawler.*;
+import schemacrawler.tools.command.template.TemplateCommand;
 import schemacrawler.tools.command.text.diagram.options.DiagramOutputFormat;
 import schemacrawler.tools.command.text.schema.options.SchemaTextOptionsBuilder;
 import schemacrawler.tools.command.text.schema.options.TextOutputFormat;
@@ -16,6 +19,7 @@ import us.fatehi.utility.LoggingConfig;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.util.List;
 import java.util.logging.Level;
 
 public final class GenerateSchema {
@@ -50,6 +54,13 @@ public final class GenerateSchema {
         additionalConfig.put("template", "plaintextschema.vm");
         additionalConfig.put("templating-language", "velocity");
         executable.setAdditionalConfiguration(additionalConfig);
+        TemplateCommand.additionalContext.put("formatter", new Formatter());
+
+        Table table = new Table("DATABASECHANGELOG", "Some description");
+        Schema schema = new Schema();
+        schema.setTables(List.of(table));
+        TemplateCommand.additionalContext.put("metadata", schema);
+
         executable.execute();
     }
 
