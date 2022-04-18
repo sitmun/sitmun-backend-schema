@@ -1,0 +1,41 @@
+== Configuration parameters
+
+These parameters configure the behaviour of the _Admin_ and the _User_ applications.
+They should be stored in the table `STM_CONF`
+
+[caption=]
+[%autowidth]
+|===
+| Key | Description | Format | Used by | Example value
+
+|`language.default`
+|Language default
+|https://en.wikipedia.org/wiki/IETF_language_tag[BCP-47]
+|Admin, User
+|`en`
+
+|`srs.default.identifier`
+|Coordinate Reference System
+|https://spatialreference.org/[`auth_name:auth_srid`]
+|User
+|https://spatialreference.org/ref/epsg/25831/[`EPSG:25831`]
+
+|`srs.default.proj4`
+|Coordinate Reference System definition
+|http://proj4js.org/[Proj4 format]
+|User
+|`+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs`
+
+|`srs.default.x`
+|First axis meaning
+|
+|Admin, User
+|`x`
+
+|`srs.default.y`
+|Second axis meaning
+|
+|Admin, User
+|`y`
+|===
+

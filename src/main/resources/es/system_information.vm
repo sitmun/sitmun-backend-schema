@@ -1,0 +1,14 @@
+#* @vtlvariable name="formatter" type="schemacrawler.tools.text.formatter.schema.SchemaTextFormatter" *#
+== Información del Sistema
+#* @vtlvariable name="catalog" type="schemacrawler.schema.Catalog" *#
+[cols="1,1"]
+|===
+|generado por
+|$catalog.crawlInfo.schemaCrawlerVersion
+
+|generado en
+|$catalog.crawlInfo.crawlTimestamp
+
+|base de datos
+|$catalog.crawlInfo.databaseVersion
+|===

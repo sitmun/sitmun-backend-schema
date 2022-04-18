@@ -2,6 +2,8 @@ package org.sitmun.backend.schema;
 
 import com.typesafe.config.ConfigBeanFactory;
 import com.typesafe.config.ConfigFactory;
+import org.sitmun.backend.schema.formatter.FormatterEn;
+import org.sitmun.backend.schema.formatter.FormatterEs;
 import org.sitmun.backend.schema.model.Configuration;
 import org.sitmun.backend.schema.model.Table;
 import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
@@ -19,21 +21,29 @@ import schemacrawler.tools.options.OutputOptionsBuilder;
 import us.fatehi.utility.LoggingConfig;
 
 import java.io.File;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public final class GenerateSchema {
 
+    public static Map<String, Object> formatters = new HashMap<>();
     public static void main(final String[] args) throws Exception {
+
+        formatters.put("en", new FormatterEn());
+        formatters.put("es", new FormatterEs());
 
         System.setProperty("config.file","application.conf");
         com.typesafe.config.Config config = ConfigFactory.load();
+
         Configuration conf = ConfigBeanFactory.create(config, Configuration.class);
 
         for (Table table: conf.getSchema().getTables()) {
@@ -55,6 +65,7 @@ public final class GenerateSchema {
 
         Path outputFolder = Paths.get(conf.getOutput().getFolder());
         Path imageFolder = Paths.get(conf.getOutput().getFolder(), "images");
+        Path localeFolder = Paths.get(conf.getOutput().getFolder(), "locale");
         if (Files.exists(outputFolder)) {
             Files.walk(outputFolder)
                     .sorted(Comparator.reverseOrder())
@@ -63,11 +74,22 @@ public final class GenerateSchema {
         }
         Files.createDirectory(outputFolder);
         Files.createDirectory(imageFolder);
+        Files.createDirectory(localeFolder);
         Path outputImage = Paths.get(conf.getOutput().getFolder(), "images", "schema.svg").toAbsolutePath().normalize();
         Path outputDoc = Paths.get(conf.getOutput().getFolder(), "schema.adoc").toAbsolutePath().normalize();
 
         for(String fileName : conf.getOutput().getIncludeFiles()) {
             Files.copy(Paths.get(fileName),  Paths.get(conf.getOutput().getFolder(), fileName));
+        }
+
+        try (InputStream attributes = GenerateSchema.class.getResourceAsStream("/locale/attributes.adoc")) {
+            assert attributes != null;
+            Files.copy(attributes, Paths.get(conf.getOutput().getFolder(), "locale", "attributes.adoc"));
+        }
+
+        try (InputStream attributes = GenerateSchema.class.getResourceAsStream("/locale/attributes-"+conf.getOutput().getLanguage()+".adoc")) {
+            assert attributes != null;
+            Files.copy(attributes, Paths.get(conf.getOutput().getFolder(), "locale", "attributes-"+conf.getOutput().getLanguage()+".adoc"));
         }
 
         try (Connection connection = getConnection(conf)) {
@@ -76,23 +98,23 @@ public final class GenerateSchema {
         }
     }
 
-    private static void createDocument(Configuration conf, SchemaCrawlerOptions options, Path file, Connection connection) throws Exception {
+    private static void createDocument(Configuration conf, SchemaCrawlerOptions options, Path file, Connection connection) {
         final SchemaCrawlerExecutable executable = new SchemaCrawlerExecutable("template");
         executable.setSchemaCrawlerOptions(options);
         executable.setConnection(connection);
         executable.setOutputOptions(OutputOptionsBuilder.newOutputOptions(TextOutputFormat.text, file));
         final Config additionalConfig = new Config();
-        additionalConfig.put("template", "plaintextschema.vm");
+        additionalConfig.put("template", Paths.get(conf.getOutput().getLanguage(),"plaintextschema.vm").toString());
         additionalConfig.put("templating-language", "velocity");
         executable.setAdditionalConfiguration(additionalConfig);
 
-        TemplateCommand.additionalContext.put("formatter", new Formatter());
+        TemplateCommand.additionalContext.put("formatter", formatters.get(conf.getOutput().getLanguage()));
         TemplateCommand.additionalContext.put("config", conf);
 
         executable.execute();
     }
 
-    private static void createImage(SchemaCrawlerOptions options, Path file, Connection connection) throws Exception {
+    private static void createImage(SchemaCrawlerOptions options, Path file, Connection connection) {
         final SchemaCrawlerExecutable executable = new SchemaCrawlerExecutable("schema");
         executable.setSchemaCrawlerOptions(options);
         executable.setConnection(connection);

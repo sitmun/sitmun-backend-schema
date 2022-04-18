@@ -1,0 +1,36 @@
+== Parámetros de configuración
+
+Estos parámetros configuran el comportamiento de las aplicaciones.
+Están almacenados en la tabla `STM_CONF`
+
+[caption=]
+[%autowidth]
+|===
+| Clave | Descripción | Formato | Valores de ejemplo
+
+|`language.default`
+|Idioma por defecto
+|https://en.wikipedia.org/wiki/IETF_language_tag[BCP-47]
+|`en`
+
+|`srs.default.identifier`
+|Identificación SRS por defecto
+|https://spatialreference.org/[`auth_name:auth_srid`]
+|https://spatialreference.org/ref/epsg/25831/[`EPSG:25831`]
+
+|`srs.default.proj4`
+|Definición SRS por defecto
+|http://proj4js.org/[Proj4 format]
+|`+proj=utm +zone=31 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs`
+
+|`srs.default.x`
+|Significado del primer eje en el SRS
+|
+|`x`
+
+|`srs.default.y`
+|Significado del segundo eje en el SRS
+|
+|`y`
+|===
+

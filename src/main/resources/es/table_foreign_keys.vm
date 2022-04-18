@@ -1,0 +1,18 @@
+#* @vtlvariable name="table" type="schemacrawler.schema.Table" *#
+#* @vtlvariable name="formatter" type="org.sitmun.backend.schema.formatter.FormatterEs" *#
+
+[caption=]
+.Claves ajenas
+[%autowidth]
+|===
+| Clave | Tipo | Columnas | Cardinalidad | Referencia | Columnas
+
+#foreach($key in $table.importedForeignKeys)
+|`$key.name`
+|clave ajena$formatter.ruleDetails($key)
+|#foreach($column in $key.constrainedColumns) `$column.name` #if($foreach.count < $key.constrainedColumns.size()), #end #end
+|$formatter.cardinality($key)
+|`$key.referencedTable.name`
+|#foreach($column in $key.columnReferences) `$column.primaryKeyColumn.name` #if($foreach.count < $key.columnReferences.size()), #end #end
+#end
+|===

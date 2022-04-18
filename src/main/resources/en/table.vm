@@ -1,0 +1,20 @@
+#* @vtlvariable name="identifiers" type="schemacrawler.schemacrawler.Identifiers" *#
+#* @vtlvariable name="table" type="schemacrawler.schema.Table" *#
+#* @vtlvariable name="config" type="org.sitmun.backend.schema.model.Configuration" *#
+
+#if ($table.tableType == "table")
+=== Table `$table.name`
+    #if($config.schema.hasTable($table.name))
+$config.schema.getTable($table.name).description
+    #end
+    #parse("table_columns.vm")
+    #if($table.hasPrimaryKey())
+        #parse("table_primary_key.vm")
+    #end
+    #if(!$table.foreignKeys.isEmpty())
+        #parse("table_foreign_keys.vm")
+    #end
+    #if(!$table.indexes.isEmpty())
+        #parse("table_indexes.vm")
+    #end
+#end

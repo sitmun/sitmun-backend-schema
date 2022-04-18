@@ -15,17 +15,20 @@ dependencies {
 asciidoctorPdf {
     dependsOn asciidoctorGemsPrepare
 
-    sourceDir = 'docs'
+    sourceDir = './build/docs'
+    baseDirFollowsSourceDir()
+
     sources {
         include 'schema.adoc'
     }
-    outputDir  file('build/docs')
+    outputDir  file('build/pdf')
+
 
     asciidoctorj {
         requires 'rouge'
         attributes 'build-gradle': file('build.gradle'),
                 'source-highlighter': 'rouge',
-                'imagesdir': './docs/images',
+                'imagesdir': 'images',
                 'toc': 'left',
                 'icons': 'font',
                 'idprefix': '',

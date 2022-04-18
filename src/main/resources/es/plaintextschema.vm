@@ -1,0 +1,26 @@
+#* @vtlvariable name="config" type="org.sitmun.backend.schema.model.Configuration" *#
+= Diccionario de datos de SITMUN 3
+:reproducible:
+:listing-caption: Listing
+:source-highlighter: rouge
+:toc:
+:title-page:
+:imagesdir: ./images
+:lang: es
+include::locale/attributes.adoc[]
+
+#* @vtlvariable name="catalog" type="schemacrawler.schema.Catalog" *#
+#parse("$config.output.language/system_information.vm")
+== Diagrama
+image::schema.svg[]
+== Tablas
+#foreach($schema in $catalog.schemas)
+    #foreach($table in $catalog.getTables($schema))
+        #parse("$config.output.language/table.vm")
+    #end
+#end
+
+#set($noop = "[]")
+#foreach($file in $config.output.includeFiles)
+include::$file$noop
+#end

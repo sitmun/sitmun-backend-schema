@@ -1,0 +1,15 @@
+#* @vtlvariable name="table" type="schemacrawler.schema.Table" *#
+#* @vtlvariable name="formatter" type="org.sitmun.backend.schema.formatter.FormatterEs" *#
+
+[caption=]
+.Indexes
+[%autowidth]
+|===
+| Key | Type | Columns
+
+#foreach($index in $table.indexes)
+|`$index.name`
+|$formatter.indexDetails($index)
+|#foreach($column in $index.columns) `$column.name` $formatter.sortSequence($column)#if($foreach.count < $index.columns.size()), #end #end
+#end
+|===
