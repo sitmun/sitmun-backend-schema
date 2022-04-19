@@ -1,0 +1,6 @@
+== Sentencias SQL
+
+[source,sql]
+----
+include::schema.h2.sql[]
+----

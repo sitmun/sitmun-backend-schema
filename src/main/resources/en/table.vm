@@ -4,8 +4,8 @@
 
 #if ($table.tableType == "table")
 === Table `$table.name`
-    #if($config.schema.hasTable($table.name))
-$config.schema.getTable($table.name).description
+    #if($config.schema.hasEntity($table.name))
+$config.schema.getEntitity($table.name).description
     #end
     #parse("table_columns.vm")
     #if($table.hasPrimaryKey())

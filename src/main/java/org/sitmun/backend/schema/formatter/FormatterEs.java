@@ -1,7 +1,12 @@
 package org.sitmun.backend.schema.formatter;
 
+import org.sitmun.backend.schema.model.Configuration;
+import org.sitmun.backend.schema.model.Entity;
 import schemacrawler.schema.*;
 import schemacrawler.utility.MetaDataUtility;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static us.fatehi.utility.Utility.hasNoUpperCase;
 
@@ -76,4 +81,41 @@ public class FormatterEs {
         }
         return columnNullable;
     }
+
+    public String formatTitle(String tableName, Configuration config) {
+        Optional<Entity> entity = config.getSchema().getEntities().stream()
+                .filter((it) -> Objects.equals(it.getTable(), tableName))
+                .findFirst();
+        if (entity.isPresent()) {
+            Entity configEntity = entity.get();
+            StringBuilder sb = new StringBuilder();
+            if (configEntity.getType() == null) {
+                sb.append("Tabla ");
+            } else {
+                sb.append(configEntity.getType()).append(" ");
+            }
+            if (configEntity.getName() == null) {
+                sb.append("`").append(tableName).append("`");
+            } else {
+                sb.append("\"").append(configEntity.getName()).append("\" (`").append(tableName).append("`)");
+            }
+            return sb.toString();
+        } else {
+            return "Tabla `"+tableName+"`";
+        }
+    }
+
+    public Collection<Table> sortTables(Collection<Table> list, Configuration config) {
+        return list.stream()
+                .sorted(Comparator.comparing((it) -> {
+                    Entity entity = config.getSchema().getEntitity(it.getName());
+                    if (entity == null || entity.getType() ==  null) {
+                        return "";
+                    } else {
+                        return entity.getType();
+                    }
+                }))
+                .collect(Collectors.toList());
+    }
+
 }

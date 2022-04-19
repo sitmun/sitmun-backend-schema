@@ -1,4 +1,5 @@
 #* @vtlvariable name="config" type="org.sitmun.backend.schema.model.Configuration" *#
+#* @vtlvariable name="formatter" type="org.sitmun.backend.schema.formatter.FormatterEs" *#
 = Diccionario de datos de SITMUN 3
 :reproducible:
 :listing-caption: Listing
@@ -15,7 +16,7 @@ include::locale/attributes.adoc[]
 image::schema.svg[]
 == Tablas
 #foreach($schema in $catalog.schemas)
-    #foreach($table in $catalog.getTables($schema))
+    #foreach($table in $formatter.sortTables($catalog.getTables($schema), $config))
         #parse("$config.output.language/table.vm")
     #end
 #end

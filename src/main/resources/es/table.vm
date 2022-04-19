@@ -1,11 +1,12 @@
 #* @vtlvariable name="identifiers" type="schemacrawler.schemacrawler.Identifiers" *#
 #* @vtlvariable name="table" type="schemacrawler.schema.Table" *#
 #* @vtlvariable name="config" type="org.sitmun.backend.schema.model.Configuration" *#
+#* @vtlvariable name="formatter" type="org.sitmun.backend.schema.formatter.FormatterEs" *#
 
 #if ($table.tableType == "table")
-=== Tabla `$table.name`
-    #if($config.schema.hasTable($table.name))
-$config.schema.getTable($table.name).description
+=== $formatter.formatTitle($table.name, $config)
+    #if($config.schema.hasEntity($table.name))
+$config.schema.getEntitity($table.name).description
     #end
     #parse("$config.output.language/table_columns.vm")
     #if($table.hasPrimaryKey())

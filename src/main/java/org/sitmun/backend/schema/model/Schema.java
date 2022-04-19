@@ -8,13 +8,13 @@ import java.util.Objects;
 @Data
 public class Schema {
     private String name;
-    private List<Table> tables;
+    private List<Entity> entities;
 
-    public boolean hasTable(String name) {
-        return tables.stream().anyMatch((it) -> Objects.equals(it.getName(), name));
+    public boolean hasEntity(String table) {
+        return entities.stream().anyMatch((it) -> Objects.equals(it.getTable(), table));
     }
 
-    public Table getTable(String name) {
-        return tables.stream().filter((it) -> Objects.equals(it.getName(), name)).findFirst().orElse(null);
+    public Entity getEntitity(String table) {
+        return entities.stream().filter((it) -> Objects.equals(it.getTable(), table)).findFirst().orElse(null);
     }
 }

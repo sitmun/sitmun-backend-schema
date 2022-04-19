@@ -5,7 +5,7 @@ import com.typesafe.config.ConfigFactory;
 import org.sitmun.backend.schema.formatter.FormatterEn;
 import org.sitmun.backend.schema.formatter.FormatterEs;
 import org.sitmun.backend.schema.model.Configuration;
-import org.sitmun.backend.schema.model.Table;
+import org.sitmun.backend.schema.model.Entity;
 import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
 import schemacrawler.schemacrawler.*;
 import schemacrawler.tools.command.template.TemplateCommand;
@@ -46,8 +46,8 @@ public final class GenerateSchema {
 
         Configuration conf = ConfigBeanFactory.create(config, Configuration.class);
 
-        for (Table table: conf.getSchema().getTables()) {
-            table.setDescription(trim(table.getDescription()));
+        for (Entity entity: conf.getSchema().getEntities()) {
+            entity.setDescription(trim(entity.getDescription()));
         }
 
         // Set log level
