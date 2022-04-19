@@ -72,13 +72,17 @@ public final class GenerateSchema {
                     .map(Path::toFile)
                     .forEach(File::delete);
         }
-        Files.createDirectory(outputFolder);
+        outputFolder.toFile().mkdirs();
         Files.createDirectory(imageFolder);
         Files.createDirectory(localeFolder);
         Path outputImage = Paths.get(conf.getOutput().getFolder(), "images", "schema.svg").toAbsolutePath().normalize();
         Path outputDoc = Paths.get(conf.getOutput().getFolder(), "schema.adoc").toAbsolutePath().normalize();
 
         for(String fileName : conf.getOutput().getIncludeFiles()) {
+            Files.copy(Paths.get(fileName),  Paths.get(conf.getOutput().getFolder(), fileName));
+        }
+
+        for(String fileName : conf.getOutput().getCopyFiles()) {
             Files.copy(Paths.get(fileName),  Paths.get(conf.getOutput().getFolder(), fileName));
         }
 
@@ -136,7 +140,6 @@ public final class GenerateSchema {
     private static String trim(String text) {
         return Pattern.compile("\n").splitAsStream(text)
                 .map(String::trim)
-                .filter(s -> !s.isEmpty())
                 .collect(Collectors.joining("\n"));
     }
 }

@@ -9,4 +9,5 @@ public class Output {
     private String folder;
     private String language;
     private List<String> includeFiles;
+    private List<String> copyFiles;
 }
