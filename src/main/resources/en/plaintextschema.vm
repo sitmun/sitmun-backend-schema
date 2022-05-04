@@ -21,6 +21,6 @@ image::schema.svg[]
 #end
 
 #set($noop = "[]")
-#foreach($file in $config.output.includeFiles)
+#foreach($file in $config.output.includePost)
 include::$file$noop
 #end

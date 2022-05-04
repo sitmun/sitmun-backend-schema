@@ -5,7 +5,6 @@ import com.typesafe.config.ConfigFactory;
 import org.sitmun.backend.schema.formatter.FormatterEn;
 import org.sitmun.backend.schema.formatter.FormatterEs;
 import org.sitmun.backend.schema.model.Configuration;
-import org.sitmun.backend.schema.model.Entity;
 import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
 import schemacrawler.schemacrawler.*;
 import schemacrawler.tools.command.template.TemplateCommand;
@@ -30,8 +29,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public final class GenerateSchema {
 
@@ -45,10 +42,6 @@ public final class GenerateSchema {
         com.typesafe.config.Config config = ConfigFactory.load();
 
         Configuration conf = ConfigBeanFactory.create(config, Configuration.class);
-
-        for (Entity entity: conf.getSchema().getEntities()) {
-            entity.setDescription(trim(entity.getDescription()));
-        }
 
         // Set log level
         new LoggingConfig(Level.OFF);
@@ -78,7 +71,11 @@ public final class GenerateSchema {
         Path outputImage = Paths.get(conf.getOutput().getFolder(), "images", "schema.svg").toAbsolutePath().normalize();
         Path outputDoc = Paths.get(conf.getOutput().getFolder(), "schema.adoc").toAbsolutePath().normalize();
 
-        for(String fileName : conf.getOutput().getIncludeFiles()) {
+        for(String fileName : conf.getOutput().getIncludePre()) {
+            Files.copy(Paths.get(fileName),  Paths.get(conf.getOutput().getFolder(), fileName));
+        }
+
+        for(String fileName : conf.getOutput().getIncludePost()) {
             Files.copy(Paths.get(fileName),  Paths.get(conf.getOutput().getFolder(), fileName));
         }
 
@@ -135,11 +132,5 @@ public final class GenerateSchema {
         final DatabaseConnectionSource dataSource = new DatabaseConnectionSource(connectionUrl);
         dataSource.setUserCredentials(new SingleUseUserCredentials(conf.getDatabase().getUser(), conf.getDatabase().getPassword()));
         return dataSource.get();
-    }
-
-    private static String trim(String text) {
-        return Pattern.compile("\n").splitAsStream(text)
-                .map(String::trim)
-                .collect(Collectors.joining("\n"));
     }
 }

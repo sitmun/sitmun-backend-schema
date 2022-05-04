@@ -1,15 +1,19 @@
 #* @vtlvariable name="table" type="schemacrawler.schema.Table" *#
 #* @vtlvariable name="formatter" type="org.sitmun.backend.schema.formatter.FormatterEs" *#
+#* @vtlvariable name="config" type="org.sitmun.backend.schema.model.Configuration" *#
 
 [caption=]
 .Columnas
 [%autowidth]
 |===
-|Tipo |Columna | Tipo de datos
+| Tipo | Columna | Tipo | Etiquetas | Descripción
 
 #foreach($column in $table.columns)
+#set($md = $config.schema.getColumn($table.name, $column.name))
 |#if($column.isPartOfPrimaryKey()) PK #end #if($column.isPartOfUniqueIndex() && !$column.isPartOfPrimaryKey()) UQ #end #if($column.isPartOfForeignKey()) FK #end
 | `$column.name`
-|$formatter.columnTypeName($column)
+| $formatter.columnTypeName($column)
+| #foreach($tag in $md.tags) `$tag` #if( $foreach.hasNext ),#end #end
+| #if($md) $md.description #end
 #end
 |===

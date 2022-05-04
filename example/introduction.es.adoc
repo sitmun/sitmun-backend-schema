@@ -1,0 +1,36 @@
+== Introducción
+
+Este documento se describe el esquema de datos de SITMUN 3.
+
+Este documento está disponible en formato PDF en link:schema.pdf[schema.pdf].
+
+=== Contenido del documento
+
+Este documento describe cada una de las tablas del esquema de datos de SITMUN 3. Las tablas están organizadas en:
+
+- *Entidades*. Tablas que tienen una representación directa en objetos del dominio de la implementación de backend.
+
+=== Interpretación de etiquetas
+
+A lo largo del documento se utilizan las siguentes etiquetas orientativas con el sentido siguiente:
+
+- *administrador*: el elemento puede ser editado por el cliente de administración en el momento de generar este documento. No se incluyen claves ni claves ajenas.
+- *usuario*: el elemento estará presente en la configuración de una *Aplicación* que el *Usuario* esté utilizando para acceder a un *Territorio*. No se incluyen claves ni claves ajenas.
+- *proxy*: extensión de *usuario* para indicar que el elemento que será una URL estará presente en la configuración, pero modificado para que apunte al *middleware* donde se resolverá al valor original.
+- *middleware*: el elemento será proporcionado al *middleware* si es accesible para el *Usuario* que esté usando una *Aplicación* para trabajar sobre un *Territorio*
+
+Además hay una serie de etiquetas que sirven para identificar potenciales problemas técnicos que deben ser revisados por el Comité Técnico de SITMUN.
+
+- *obsoleto*: el elemento es legado de SITMUN 2 y deberá ser eliminado del esquema antes de pasar a producción si no está disponible en el cliente de administración.
+- *revisar descripción*: la descripción de este elemento es incompleta y requiere un trabajo de revisión en el Comité Técnico de SITMUN.
+- *revisar administrador*: este elemento debería estar disponible en el administrador en su versión actual pero no se ha podido localizar y por ello requiere un trabajo de revisión en el Comité Técnico de SITMUN
+- *información personal*: información potencialmente afectada por la Ley Orgánica de Protección de Datos de Carácter Personal.
+
+=== Interpretación de las notas
+
+Cuando en alguna parte del documento aparece una nota con la forma:
+
+IMPORTANT: Comentario o idea
+
+se señala un aspecto que tendría que ser abordado por el Comité Técnico de SITMUN.
+

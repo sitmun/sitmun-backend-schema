@@ -17,4 +17,11 @@ public class Schema {
     public Entity getEntitity(String table) {
         return entities.stream().filter((it) -> Objects.equals(it.getTable(), table)).findFirst().orElse(null);
     }
+
+    public Column getColumn(String tableName, String columnName) {
+        Entity table = getEntitity(tableName);
+        if (table == null || table.getColumns() == null)
+            return null;
+        return table.getColumns().stream().filter((it) -> Objects.equals(it.getName(), columnName)).findFirst().orElse(null);
+    }
 }

@@ -8,6 +8,7 @@ import java.util.List;
 public class Output {
     private String folder;
     private String language;
-    private List<String> includeFiles;
+    private List<String> includePre;
+    private List<String> includePost;
     private List<String> copyFiles;
 }

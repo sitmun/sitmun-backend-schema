@@ -4,16 +4,17 @@
 :reproducible:
 :listing-caption: Listing
 :source-highlighter: rouge
-:toc:
+:toc: left
 :title-page:
 :imagesdir: ./images
 :lang: es
 include::locale/attributes.adoc[]
+#set($noop = "[]")
 
-#* @vtlvariable name="catalog" type="schemacrawler.schema.Catalog" *#
-#parse("$config.output.language/system_information.vm")
-== Diagrama
-image::schema.svg[]
+#foreach($file in $config.output.includePre)
+include::$file$noop
+#end
+
 == Tablas
 #foreach($schema in $catalog.schemas)
     #foreach($table in $formatter.sortTables($catalog.getTables($schema), $config))
@@ -21,7 +22,12 @@ image::schema.svg[]
     #end
 #end
 
-#set($noop = "[]")
-#foreach($file in $config.output.includeFiles)
+== Diagrama
+image::schema.svg[]
+
+#foreach($file in $config.output.includePost)
 include::$file$noop
 #end
+
+#* @vtlvariable name="catalog" type="schemacrawler.schema.Catalog" *#
+#parse("$config.output.language/system_information.vm")

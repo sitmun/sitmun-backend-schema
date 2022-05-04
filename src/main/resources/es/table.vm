@@ -6,16 +6,18 @@
 #if ($table.tableType == "table")
 === $formatter.formatTitle($table.name, $config)
     #if($config.schema.hasEntity($table.name))
-$config.schema.getEntitity($table.name).description
+$formatter.trimIndent($config.schema.getEntitity($table.name).description)
     #end
     #parse("$config.output.language/table_columns.vm")
     #if($table.hasPrimaryKey())
         #parse("$config.output.language/table_primary_key.vm")
     #end
-    #if(!$table.foreignKeys.isEmpty())
+    #if(!$table.importedForeignKeys.isEmpty())
         #parse("$config.output.language/table_foreign_keys.vm")
     #end
     #if(!$table.indexes.isEmpty())
         #parse("$config.output.language/table_indexes.vm")
     #end
+'''
+<<<
 #end

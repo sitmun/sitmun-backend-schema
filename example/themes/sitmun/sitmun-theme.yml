@@ -31,6 +31,5 @@ footer:
     left:
       content: $footer-recto-right-content
 admonition:
-  background-color: #ffffff
   column-rule-width: 2
 

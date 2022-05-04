@@ -6,6 +6,7 @@ import schemacrawler.schema.*;
 import schemacrawler.utility.MetaDataUtility;
 
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static us.fatehi.utility.Utility.hasNoUpperCase;
@@ -86,36 +87,53 @@ public class FormatterEs {
         Optional<Entity> entity = config.getSchema().getEntities().stream()
                 .filter((it) -> Objects.equals(it.getTable(), tableName))
                 .findFirst();
+        StringBuilder sb = new StringBuilder();
+        sb.append("`").append(tableName).append("`");
         if (entity.isPresent()) {
             Entity configEntity = entity.get();
-            StringBuilder sb = new StringBuilder();
-            if (configEntity.getType() == null) {
-                sb.append("Tabla ");
-            } else {
-                sb.append(configEntity.getType()).append(" ");
+            sb.append(":");
+            if (configEntity.getType() != null) {
+                sb.append(" ").append(configEntity.getType());
             }
-            if (configEntity.getName() == null) {
-                sb.append("`").append(tableName).append("`");
-            } else {
-                sb.append("\"").append(configEntity.getName()).append("\" (`").append(tableName).append("`)");
+            if (configEntity.getName() != null) {
+                sb.append(" \"").append(configEntity.getName()).append("\"");
             }
-            return sb.toString();
-        } else {
-            return "Tabla `"+tableName+"`";
         }
+        return sb.toString();
     }
 
     public Collection<Table> sortTables(Collection<Table> list, Configuration config) {
         return list.stream()
                 .sorted(Comparator.comparing((it) -> {
                     Entity entity = config.getSchema().getEntitity(it.getName());
-                    if (entity == null || entity.getType() ==  null) {
+                    if (entity == null || entity.getTable() ==  null) {
                         return "";
                     } else {
-                        return entity.getType();
+                        return entity.getTable();
                     }
                 }))
                 .collect(Collectors.toList());
+    }
+
+    public String trimIndent(String text) {
+        String[] lines = Pattern.compile("\n").split(text);
+
+        Integer indent = Arrays.stream(lines).filter((it) -> !it.isBlank()).map((it) -> {
+            int min = it.length();
+            for(int i=0; i<it.length(); i++) {
+                if (!Character.isWhitespace(it.charAt(i))) {
+                    min = i;
+                    break;
+                }
+            }
+            return min;
+        }).min(Integer::compareTo).orElseGet(() ->  0);
+        return Arrays.stream(lines).map((it) -> {
+            if (it.isBlank())
+                return it;
+            else
+                return it.substring(indent);
+        }).collect(Collectors.joining("\n"));
     }
 
 }
