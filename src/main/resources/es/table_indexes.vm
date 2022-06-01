@@ -5,7 +5,7 @@
 .Índices
 [%autowidth]
 |===
-| Clave | Tipo | Columnas
+| Nombre | Tipo | Columnas
 
 #foreach($index in $table.indexes)
 |`$index.name`

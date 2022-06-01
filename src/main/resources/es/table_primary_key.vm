@@ -5,7 +5,7 @@
 .Claves primarias
 [%autowidth]
 |===
-| Clave | Tipo | Columnas
+| Nombre | Tipo | Columnas
 
 #if($table.primaryKey)
 |`$table.primaryKey.name`

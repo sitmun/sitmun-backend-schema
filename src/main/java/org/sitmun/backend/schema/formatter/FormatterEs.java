@@ -19,7 +19,7 @@ public class FormatterEs {
         if (indexType != IndexType.unknown && indexType != IndexType.other) {
             indexTypeString = indexType.toString() + " ";
         }
-        return "índice " + indexTypeString + (index.isUnique() ? "" : "no ") + "unique ";
+        return "índice " + indexTypeString + (index.isUnique() ? "" : "no ") + "único ";
     }
 
     public String sortSequence(IndexColumn index) {

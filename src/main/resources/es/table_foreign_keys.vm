@@ -5,7 +5,7 @@
 .Claves ajenas
 [%autowidth]
 |===
-| Clave | Tipo | Columnas | Cardinalidad | Referencia | Columnas
+| Nombre | Tipo | Columnas | Cardinalidad | Referencia | Columnas
 
 #foreach($key in $table.importedForeignKeys)
 |`$key.name`
