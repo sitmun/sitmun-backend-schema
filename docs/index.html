@@ -692,7 +692,7 @@ pre.rouge {
 <li><a href="#_stm_par_app_entidad_parámetro_de_aplicación"><code>STM_PAR_APP</code>: Entidad "Parámetro de Aplicación"</a></li>
 <li><a href="#_stm_par_gi_entidad_parámetro_de_información_geográfica_servicios_de_visualización"><code>STM_PAR_GI</code>: Entidad "Parámetro de Información Geográfica (servicios de visualización)"</a></li>
 <li><a href="#_stm_par_ser_entidad_parámetro_de_servicio"><code>STM_PAR_SER</code>: Entidad "Parámetro de Servicio"</a></li>
-<li><a href="#_stm_par_sgi_entidad_parámetro_de_información_geográfica_servicios_de_selección_espacial"><code>STM_PAR_SGI</code>: Entidad "Parámetro de Información Geográfica (servicios de selección espacial)"</a></li>
+<li><a href="#_stm_par_sgi_entidad_obsoleta_parámetro_de_información_geográfica_servicios_de_selección_espacial"><code>STM_PAR_SGI</code>: Entidad obsoleta "Parámetro de Información Geográfica (servicios de selección espacial)"</a></li>
 <li><a href="#_stm_par_tsk_entidad_obsoleta_parámetro_de_tarea"><code>STM_PAR_TSK</code>: Entidad obsoleta "Parámetro de Tarea"</a></li>
 <li><a href="#_stm_post_entidad_puesto_de_trabajo"><code>STM_POST</code>: Entidad "Puesto de trabajo"</a></li>
 <li><a href="#_stm_query_entidad_obsoleta_tarea_de_consultas"><code>STM_QUERY</code>: Entidad obsoleta "Tarea de Consultas"</a></li>
@@ -3301,29 +3301,33 @@ servidor remoto.</p>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>GEO_SELECTABL</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">BOOLEAN</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>administrador</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Si es verdad, se puede hacer utilizado para operaciones tipo <code>GetFeature</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>administrador</code> ,  <code>obsoleta</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Si es verdad, se puede hacer utilizado para operaciones tipo <code>GetFeature</code>.</p>
+<p class="tableblock">          NOTA: Esta operación debe ser una Tarea.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>GEO_SELECTLAY</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">VARCHAR(500)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>administrador</code> ,  <code>middleware</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Lista de identificadores de capas separados por comas usados en operaciones tipo <code>GetFeature</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>administrador</code> ,  <code>middleware</code> ,  <code>obsoleta</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Lista de identificadores de capas separados por comas usados en operaciones tipo <code>GetFeature</code>.</p>
+<p class="tableblock">          NOTA: Esta operación debe ser una Tarea.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>GEO_FILTER_SS</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">BOOLEAN</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>administrador</code> ,  <code>middleware</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Si hay filtro territorial, se aplican a operaciones tipo <code>GetFeature</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>administrador</code> ,  <code>middleware</code> ,  <code>obsoleta</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Si hay filtro territorial, se aplican a operaciones tipo <code>GetFeature</code>.</p>
+<p class="tableblock">          NOTA: Esta operación debe ser una Tarea.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">FK</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>GEO_SERSELID</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">INTEGER</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Servicio utilizado para las operaciones tipo <code>GetFeature</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>obsoleta</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Servicio utilizado para las operaciones tipo <code>GetFeature</code>.</p>
+<p class="tableblock">          NOTA: Esta operación debe ser una Tarea.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"></td>
@@ -3351,9 +3355,9 @@ servidor remoto.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">FK</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>GEO_CONNID</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">INTEGER</p></td>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Conexión para operaciones de selección de tipo listbox.
-           <strong>NOTA: Esta es una funcionalidad de SITMUN 2 que debe evaluarse como se implemena en SITMUN 3.</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>obsoleta</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Conexión para operaciones de selección de tipo listbox.</p>
+<p class="tableblock">          NOTA: Esta operación debe ser una Tarea.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"></td>
@@ -4923,7 +4927,7 @@ Este parámetro será utilizado por los servicios de visualización.</p>
 <div style="page-break-after: always;"></div>
 </div>
 <div class="sect2">
-<h3 id="_stm_par_sgi_entidad_parámetro_de_información_geográfica_servicios_de_selección_espacial"><code>STM_PAR_SGI</code>: Entidad "Parámetro de Información Geográfica (servicios de selección espacial)"</h3>
+<h3 id="_stm_par_sgi_entidad_obsoleta_parámetro_de_información_geográfica_servicios_de_selección_espacial"><code>STM_PAR_SGI</code>: Entidad obsoleta "Parámetro de Información Geográfica (servicios de selección espacial)"</h3>
 <div class="paragraph">
 <p>Parámetro de configuración específico de un recurso de Información Geográfica.
 Este parámetro será utilizado por los servicios de selección espacial.</p>
@@ -4933,6 +4937,21 @@ Este parámetro será utilizado por los servicios de selección espacial.</p>
 </div>
 <div class="paragraph">
 <p><code>org.sitmun.common.domain.cartography.parameter.CartographySpatialSelectionParameter</code></p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Importante</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Esta tabla está marcada como obsoleta pero está soportada por el administrador.
+Por lo tanto forma parte del esquema de producción.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <table class="tableblock frame-all grid-all fit-content">
 <caption class="title">Columnas</caption>
@@ -9195,7 +9214,7 @@ o en los miembros de dicho <strong>Terriorio</strong>.</p>
 <div class="sectionbody">
 <div class="imageblock">
 <div class="content">
-<img src="./images/schema.svg" alt="schema">
+<img src="../example/build/docs/images/schema.svg" alt="schema">
 </div>
 </div>
 </div>
@@ -10881,7 +10900,7 @@ Están almacenados en la tabla <code>STM_CONF</code></p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">generado en</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2022-06-01 16:23:12</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2022-06-13 08:37:50</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">base de datos</p></td>
