@@ -1,3 +1,5 @@
+> **Archived.** This repository is obsolete and receives no further changes. SITMUN is developed in [sitmun/sitmun](https://github.com/sitmun/sitmun); documentation: [https://sitmun.github.io](https://sitmun.github.io).
+
 # Sitmun Backend Schema
 
 ## Tools
